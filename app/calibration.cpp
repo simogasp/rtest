@@ -41,7 +41,8 @@ const char* liveCaptureHelp =
     "When the live video from camera is used as input, the following hot-keys may be used:\n"
         "  <ESC>, 'q' - quit the program\n"
         "  'g' - start capturing images\n"
-        "  'u' - switch undistortion on/off\n";
+        "  'u' - switch undistortion on/off\n"
+		"  't' - to take the shot if delay <=0\n";
 
 static void help()
 {
@@ -55,6 +56,7 @@ static void help()
         "                              #  of board views actually available)\n"
         "     [-d <delay>]             # a minimum delay in ms between subsequent attempts to capture a next view\n"
         "                              # (used only for video capturing)\n"
+        "                              # if <=0, then the capture will be done manually by pressing 't'\n"
         "     [-s <squareSize>]       # square size in some user-defined units (1 by default)\n"
         "     [-o <out_camera_params>] # the output filename for intrinsic [and extrinsic] parameters\n"
         "     [-op]                    # write detected feature points\n"
@@ -364,7 +366,7 @@ int main( int argc, char** argv )
         }
         else if( strcmp( s, "-d" ) == 0 )
         {
-            if( sscanf( argv[++i], "%u", &delay ) != 1 || delay <= 0 )
+            if( sscanf( argv[++i], "%u", &delay ) != 1  )
                 return printf("Invalid delay\n" ), -1;
         }
         else if( strcmp( s, "-op" ) == 0 )
@@ -418,13 +420,21 @@ int main( int argc, char** argv )
             capture.open(inputFilename);
     }
     else
+	{
         capture.open(cameraId);
+	}
 
     if( !capture.isOpened() && imageList.empty() )
         return fprintf( stderr, "Could not initialize video (%d) capture\n",cameraId ), -2;
 
     if( !imageList.empty() )
         nframes = (int)imageList.size();
+	
+	if( ! inputFilename )
+	{
+		capture.set(CV_CAP_PROP_FRAME_WIDTH, 640);
+		capture.set(CV_CAP_PROP_FRAME_HEIGHT, 480);
+	}
 
     if( capture.isOpened() )
         printf( "%s", liveCaptureHelp );
@@ -433,6 +443,7 @@ int main( int argc, char** argv )
 
     for(i = 0;;i++)
     {
+		int key;
         Mat view, viewGray;
         bool blink = false;
 
@@ -485,7 +496,7 @@ int main( int argc, char** argv )
             Size(-1,-1), TermCriteria( CV_TERMCRIT_EPS+CV_TERMCRIT_ITER, 30, 0.1 ));
 
         if( mode == CAPTURING && found &&
-           (!capture.isOpened() || clock() - prevTimestamp > delay*1e-3*CLOCKS_PER_SEC) )
+           (!capture.isOpened() || ( ( ( delay <=0 ) && ( key == 't') ) || ( ( delay > 0) && ( clock() - prevTimestamp > delay*1e-3*CLOCKS_PER_SEC ) )  )) )
         {
             imagePoints.push_back(pointbuf);
             prevTimestamp = clock();
@@ -504,9 +515,9 @@ int main( int argc, char** argv )
         if( mode == CAPTURING )
         {
             if(undistortImage)
-                msg = format( "%d/%d Undist", (int)imagePoints.size(), nframes );
+                msg = format( "Press 't' to grab image     %d/%d Undist", (int)imagePoints.size(), nframes );
             else
-                msg = format( "%d/%d", (int)imagePoints.size(), nframes );
+                msg = format( "Press 't' to grab image     %d/%d", (int)imagePoints.size(), nframes );
         }
 
         putText( view, msg, textOrigin, 1, 1,
@@ -522,7 +533,7 @@ int main( int argc, char** argv )
         }
 
         imshow("Image View", view);
-        int key = 0xff & waitKey(capture.isOpened() ? 50 : 500);
+        key = 0xff & waitKey(capture.isOpened() ? 50 : 500);
 
         if( (key & 255) == 27 )
             break;
