@@ -119,6 +119,23 @@ else()
     message( "-- Found OpenCV version: ${OpenCV_VERSION}" )
 endif(NOT OpenCV_FOUND)
 
+
+#########################################################
+# FIND ARTOOLKITPLUS
+#########################################################
+find_package(ARToolKitPlus REQUIRED)
+include_directories(${ARTOOLKITPLUS_INCLUDE_DIR})
+link_directories(${ARTOOLKITPLUS_LIBRARIES})
+ MESSAGE( "${ARTOOLKITPLUS_INCLUDE_DIR}" )
+ MESSAGE( "${ARTOOLKITPLUS_LIBRARIES}" )
+ MESSAGE( "${ARTOOLKITPLUS_FOUND}" )
+
+if(NOT ARTOOLKITPLUS_FOUND)
+    message(ERROR " ARToolKitPlus not found!")
+else()
+    message( "-- Found ARToolKitPlus" )
+endif(NOT ARTOOLKITPLUS_FOUND)
+
 #########################################################
 # FIND OPENGL
 #########################################################
@@ -167,14 +184,14 @@ endif(NOT GLUT_FOUND)
 # add a target to generate API documentation with Doxygen
 find_package(Doxygen QUIET)
 # message( "${DOXYGEN_EXECUTABLE}" )
-if(DOXYGEN_FOUND)
-    set(CMAKE_DOC_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/doc/Doxyfile.in ${CMAKE_DOC_OUTPUT_DIRECTORY}/Doxyfile @ONLY)
-    add_custom_target(doc
-            ${DOXYGEN_EXECUTABLE} ${CMAKE_DOC_OUTPUT_DIRECTORY}/Doxyfile
-            WORKING_DIRECTORY ${CMAKE_DOC_OUTPUT_DIRECTORY}
-            COMMENT "Generating API documentation with Doxygen" VERBATIM)
-endif(DOXYGEN_FOUND)
+#if(DOXYGEN_FOUND)
+#    set(CMAKE_DOC_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc)
+#    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/doc/Doxyfile.in ${CMAKE_DOC_OUTPUT_DIRECTORY}/Doxyfile @ONLY)
+#    add_custom_target(doc
+#            ${DOXYGEN_EXECUTABLE} ${CMAKE_DOC_OUTPUT_DIRECTORY}/Doxyfile
+#            WORKING_DIRECTORY ${CMAKE_DOC_OUTPUT_DIRECTORY}
+#            COMMENT "Generating API documentation with Doxygen" VERBATIM)
+#endif(DOXYGEN_FOUND)
 
 
 
