@@ -1,4 +1,4 @@
-#include "tracker/Camera.hpp"
+#include "tracker/OcvCamera.hpp"
 #include "tracker/ChessboardCameraTracker.hpp"
 #include "tracker/ChessboardCameraTrackerKLT.hpp"
 #include "tracker/utility.hpp"

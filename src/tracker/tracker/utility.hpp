@@ -1,7 +1,7 @@
 #ifndef _UTILITY_HPP_
 #define	_UTILITY_HPP_
 
-#include "Camera.hpp"
+#include "OcvCamera.hpp"
 
 #include <opencv2/core/core.hpp>
 

@@ -1,7 +1,7 @@
 #ifndef _ICAMERATRACKER_HPP_
 #define	_ICAMERATRACKER_HPP_
 
-#include "Camera.hpp"
+#include "OcvCamera.hpp"
 #include "utility.hpp"
 
 class ICameraTracker

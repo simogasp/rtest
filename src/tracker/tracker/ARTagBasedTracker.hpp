@@ -8,7 +8,7 @@
 #ifndef _ARTAGBASEDTRACKER_HPP
 #define	_ARTAGBASEDTRACKER_HPP
 
-#include "Camera.hpp"
+#include "OcvCamera.hpp"
 
 #include <ARToolKitPlus/CameraAdvImpl.h>
 #include <ARToolKitPlus/TrackerSingleMarkerImpl.h>

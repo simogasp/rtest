@@ -1,4 +1,4 @@
-#include "tracker/Camera.hpp"
+#include "tracker/OcvCamera.hpp"
 
 #include <iostream>
 
