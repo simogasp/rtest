@@ -12,20 +12,20 @@
 
 #include <ARToolKitPlus/CameraAdvImpl.h>
 #include <ARToolKitPlus/TrackerSingleMarkerImpl.h>
-
+#include <opencv2/core/core.hpp>
 
 #define NOTAMARKER -1
 
 typedef int MarkerID;
 
+static const std::size_t kMaxTag = 30;
+
 class MyARLogger : public ARToolKitPlus::Logger
 {
-
-    void artLog( const char* nStr )
-    {
-	ROM_COUT( nStr );
-    }
+    void artLog( const char* nStr );	
 };
+
+
 
 class ARTKCamera : public ARToolKitPlus::CameraAdvImpl
 {
@@ -36,37 +36,18 @@ public:
 	undist_iterations = 1;
     }
 
-    ARTKCamera( const Camera & cam )
+    ARTKCamera( const OcvCamera & cam )
     {
 	loadFromK( cam );
 	undist_iterations = 1;
     }
 
-    void loadFromK( Camera & cam )
-    {
-	cc[0] = cam.matK<double>at( 0, 2 );
-	cc[1] = cam.matK<double>at( 1, 2 );
-	fc[0] = cam.matK<double>at( 0, 0 );
-	fc[1] = cam.matK<double>at( 1, 1 );
-
-	memset( kc, 0, 6 * sizeof (ARFloat ) );
-	for ( std::size_t i = 0; i < cam.distCoeff.rows; ++i )
-	{
-	    kc[i] = ( float ) cam.distCoeff<double>at( i );
-	}
-
-	for ( std::size_t i = 0; i < 3; ++i )
-	    for ( std::size_t j = 0; j < 4; ++j )
-		mat[i][j] = 0.0;
-
-	mat[0][0] = fc[0]; // fc_x
-	mat[1][1] = fc[1]; // fc_y
-	mat[0][2] = cc[0]; // cc_x
-	mat[1][2] = cc[1]; // cc_y
-	mat[2][2] = 1.0;
-    }
+    void loadFromK( const OcvCamera & cam );
 };
 
+
+	
+	
 class ARTagBasedTracker
 {
 public:
@@ -102,11 +83,11 @@ public:
 
     ARTagBasedTracker( );
 
-    void init( const Parameters & args, const Camera &cam );
+    void init( const Parameters & args, const OcvCamera &cam );
 
-    std::size_t detectMarkers( const Mat & img );
+    std::size_t detectMarkers( const cv::Mat & img );
 
-    void visualDebug( const Mat & img );
+    void visualDebug( cv::Mat & img );
 
     void ignoreMarkerNextDetection( const MarkerID id );
 
