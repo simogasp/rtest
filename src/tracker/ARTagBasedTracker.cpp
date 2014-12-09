@@ -139,23 +139,23 @@ void ARTagBasedTracker::visualDebug(  Mat & img )
 	{
 		if ( ( _infosForDebug + i )->id != NOTAMARKER )
 		{
-
+			Scalar color( 0, 255, 0 );
 			line( img,
 					Point2f( ( float ) ( _infosForDebug + i )->vertex[0][0], ( float ) ( _infosForDebug + i )->vertex[0][1] ),
 					Point2f( ( float ) ( _infosForDebug + i )->vertex[1][0], ( float ) ( _infosForDebug + i )->vertex[1][1] ),
-					Scalar( 255, 255, 0 ), 2 );
+					color, 2 );
 			line( img,
 					Point2f( ( float ) ( _infosForDebug + i )->vertex[1][0], ( float ) ( _infosForDebug + i )->vertex[1][1] ),
 					Point2f( ( float ) ( _infosForDebug + i )->vertex[2][0], ( float ) ( _infosForDebug + i )->vertex[2][1] ),
-					Scalar( 255, 255, 0 ), 2 );
+					color, 2 );
 			line( img,
 					Point2f( ( float ) ( _infosForDebug + i )->vertex[2][0], ( float ) ( _infosForDebug + i )->vertex[2][1] ),
 					Point2f( ( float ) ( _infosForDebug + i )->vertex[3][0], ( float ) ( _infosForDebug + i )->vertex[3][1] ),
-					Scalar( 255, 255, 0 ), 2 );
+					color, 2 );
 			line( img,
 					Point2f( ( float ) ( _infosForDebug + i )->vertex[0][0], ( float ) ( _infosForDebug + i )->vertex[0][1] ),
 					Point2f( ( float ) ( _infosForDebug + i )->vertex[3][0], ( float ) ( _infosForDebug + i )->vertex[3][1] ),
-					Scalar( 255, 255, 0 ), 2 );
+					color, 2 );
 
 			string str = static_cast<ostringstream*>( &(ostringstream() << (_infosForDebug + i )->id ) )->str();
 			putText( img, 
@@ -163,27 +163,28 @@ void ARTagBasedTracker::visualDebug(  Mat & img )
 					Point2f( ( float ) ( _infosForDebug + i )->pos[0], ( float ) ( _infosForDebug + i )->pos[1] ), 
 					FONT_HERSHEY_SIMPLEX, 
 					1.0,
-					Scalar( 255, 255, 0 ),
+					color,
 					2);
 		}
 		else
 		{
+			Scalar color( 0, 0, 255 );
 			line( img,
 					Point2f( ( float ) ( _infosForDebug + i )->vertex[0][0], ( float ) ( _infosForDebug + i )->vertex[0][1] ),
 					Point2f( ( float ) ( _infosForDebug + i )->vertex[1][0], ( float ) ( _infosForDebug + i )->vertex[1][1] ),
-					Scalar( 255, 0, 0 ), 2 );
+					color, 2 );
 			line( img,
 					Point2f( ( float ) ( _infosForDebug + i )->vertex[1][0], ( float ) ( _infosForDebug + i )->vertex[1][1] ),
 					Point2f( ( float ) ( _infosForDebug + i )->vertex[2][0], ( float ) ( _infosForDebug + i )->vertex[2][1] ),
-					Scalar( 255, 0, 0 ), 2 );
+					color, 2 );
 			line( img,
 					Point2f( ( float ) ( _infosForDebug + i )->vertex[2][0], ( float ) ( _infosForDebug + i )->vertex[2][1] ),
 					Point2f( ( float ) ( _infosForDebug + i )->vertex[3][0], ( float ) ( _infosForDebug + i )->vertex[3][1] ),
-					Scalar( 255, 0, 0 ), 2 );
+					color, 2 );
 			line( img,
 					Point2f( ( float ) ( _infosForDebug + i )->vertex[0][0], ( float ) ( _infosForDebug + i )->vertex[0][1] ),
 					Point2f( ( float ) ( _infosForDebug + i )->vertex[3][0], ( float ) ( _infosForDebug + i )->vertex[3][1] ),
-					Scalar( 255, 0, 0 ), 2 );
+					color, 2 );
 		}
 	}	
 }
