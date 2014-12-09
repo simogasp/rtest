@@ -19,7 +19,7 @@ using namespace cv;
 * @param[in] pattern the type of pattern to detect
 * @return true if the chessboard has been found
 */
-bool ChessboardCameraTracker::process( cv::Mat &view, cv::Mat &pose, const Camera & cam, const cv::Size &boardSize, const Pattern &pattern  )
+bool ChessboardCameraTracker::process( cv::Mat &view, cv::Mat &pose, const OcvCamera & cam, const cv::Size &boardSize, const Pattern &pattern  )
 {
 	// true if the chessboard is found
 	bool found = false;

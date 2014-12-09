@@ -11,7 +11,7 @@ using namespace cv;
  * @param[in] calibFilename the calibration file
  * @return true if success
  */
-bool Camera::init( std::string calibFilename )
+bool OcvCamera::init( std::string calibFilename )
 {
 	/******************************************************************/ 
 	// open the file storage with the given filename
@@ -55,7 +55,7 @@ bool Camera::init( std::string calibFilename )
  * @param zfar far clipping plane
  * \note using http://strawlab.org/2011/11/05/augmented-reality-with-OpenGL/
  */
-void Camera::getOGLProjectionMatrix( float *proj, const float znear, const float zfar ) const
+void OcvCamera::getOGLProjectionMatrix( float *proj, const float znear, const float zfar ) const
 {
 
 	

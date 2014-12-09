@@ -98,7 +98,7 @@ bool detectChessboard( const Mat &rgbimage, vector<Point2f> &pointbuf, const Siz
  * @param[in] scale A scale factor for the unit vectors to draw
  * @param[in] alreadyUndistorted A boolean value that tells if the input image rgbimage is already undistorted or we are working on a distorted image
  */
-void drawReferenceSystem( cv::Mat &rgbimage, const Camera& cam, const cv::Mat &projMat, const int &thickness, const double &scale, const bool alreadyUndistorted )
+void drawReferenceSystem( cv::Mat &rgbimage, const OcvCamera& cam, const cv::Mat &projMat, const int &thickness, const double &scale, const bool alreadyUndistorted )
 {
 	
 	// contains the points to project to draw the 3 axis

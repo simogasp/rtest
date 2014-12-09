@@ -47,7 +47,7 @@ void decomposeHomography( const cv::Mat &H, const cv::Mat& matK, cv::Mat& poseMa
  * @param[in] scale A scale factor for the unit vectors to draw
  * @param[in] alreadyUndistorted A boolean value that tells if the input image rgbimage is already undistorted or we are working on a distorted image
  */
-void drawReferenceSystem( cv::Mat &rgbimage, const Camera& cam, const cv::Mat &projMat, const int &thickness, const double &scale, const bool alreadyUndistorted = true );
+void drawReferenceSystem( cv::Mat &rgbimage, const OcvCamera& cam, const cv::Mat &projMat, const int &thickness, const double &scale, const bool alreadyUndistorted = true );
 
 /**
  * Wrapper around the original opencv's projectPoints

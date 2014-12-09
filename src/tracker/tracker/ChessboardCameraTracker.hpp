@@ -20,7 +20,7 @@ public:
     * @param[in] pattern the type of pattern to detect
 	* @return true if the chessboard has been found
 	*/
-    bool process( cv::Mat &view, cv::Mat &pose, const Camera & cam, const cv::Size &boardSize, const Pattern &pattern  );
+    bool process( cv::Mat &view, cv::Mat &pose, const OcvCamera & cam, const cv::Size &boardSize, const Pattern &pattern  );
 
 	virtual ~ChessboardCameraTracker() {}
 

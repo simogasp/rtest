@@ -22,7 +22,7 @@ public:
           * @param patt
           * @return 
           */
-	virtual bool process(  cv::Mat &input, cv::Mat &pose, const Camera & cam, const cv::Size &boardSize, const Pattern &patt ) = 0;
+	virtual bool process(  cv::Mat &input, cv::Mat &pose, const OcvCamera & cam, const cv::Size &boardSize, const Pattern &patt ) = 0;
 
 
 	/***************************************************

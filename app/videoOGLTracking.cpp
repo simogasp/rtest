@@ -327,7 +327,7 @@ int main( int argc, char** argv )
 	VideoCapture capture;
 
 	// Camera object containing the calibration parameters
-	Camera cam;
+	OcvCamera cam;
 
 	// Camera Tracker object
 	ChessboardCameraTrackerKLT tracker;

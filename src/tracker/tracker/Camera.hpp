@@ -3,11 +3,11 @@
 
 #include <opencv2/core/core.hpp>
 
-class Camera
+class OcvCamera
 {
 public:
     
-	Camera() {}
+	OcvCamera() {}
 
 	/**
 	 * Initialize the camera loading the internal parameters from the given file
@@ -17,7 +17,7 @@ public:
 	 */
 	bool init( std::string calibFilename );
 
-	~Camera( ) {}
+	~OcvCamera( ) {}
 
        
     /**
