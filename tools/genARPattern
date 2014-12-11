@@ -8,6 +8,17 @@ import sys, getopt, os, svgwrite
 
 pageFormat = { 'a4' : ('210mm','297mm'), 'a4l' : ('280mm','297mm'), 'a3' : ('297mm','420mm'), 'a3l' : ('420mm','297mm')}
 
+def help(name):
+    """ print the usage for the program
+    """
+    print('Usage:\n\t'+name+' -i <directory containing the markers> -o <output file>')
+    print("\nSupported languages:\nLanguage\t\ttoken")
+    for i in suppLang:
+        print(i.name+"\t\t\t"+i.token)
+
+# use this instead
+#https://docs.python.org/2/library/optparse.html#optparse-standard-option-actions
+
 if __name__ == "__main__":  
 
     # size of the marker in cm
