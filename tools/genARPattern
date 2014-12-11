@@ -6,24 +6,27 @@
 
 import sys, getopt, os, svgwrite
 
+pageFormat = { 'a4' : ('210mm','297mm'), 'a4l' : ('280mm','297mm'), 'a3' : ('297mm','420mm'), 'a3l' : ('420mm','297mm')}
 
 if __name__ == "__main__":  
 
     # size of the marker in cm
     size = 4
     # number of rows
-    rows = 3
+    rows = 5
     # number of cols
-    cols = 3
+    cols = 7
     # space between markers in cm
     gap = 1.5
 
     base = './arlibs/ARToolkitPlus/id-markers/simple/std-border/'
 
-    dwg = svgwrite.Drawing('test.svg', profile='tiny')
+    dwg = svgwrite.Drawing('test.svg', size=pageFormat['a3l'], profile='tiny')
 
     for i in range(0, rows):
         for j in range(0, cols):
-            dwg.add(dwg.image(base+'SimpleStd_00'+str(i*cols+j)+'.png', insert=(str(gap+j*(size+gap))+'cm',str(gap+i*(size+gap))+'cm'), size=(str(size)+'cm',str(size)+'cm')))
+            filename = '%sSimpleStd_%03d.png' %(base, (i*cols+j))
+            # print(filename)
+            dwg.add(dwg.image(filename, insert=(str(gap+j*(size+gap))+'cm',str(gap+i*(size+gap))+'cm'), size=(str(size)+'cm',str(size)+'cm')))
     
     dwg.save()
