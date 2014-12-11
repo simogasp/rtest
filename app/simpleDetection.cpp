@@ -8,6 +8,7 @@
 
 
 #include "tracker/ARTagBasedTracker.hpp"
+#include "tracker/utility.hpp"
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <iostream>
@@ -106,6 +107,10 @@ int main( int argc, char** argv )
             // draw the reference on top of the image
 			//******************************************************************/
         	tracker.visualDebug( view );
+			Mat pose;
+			tracker.getPoseMatrix( pose );
+			PRINTVAR(pose);
+			drawReferenceSystem( view, cam, pose, 4, 15, true );
         }
 
 		/******************************************************************/
@@ -115,13 +120,13 @@ int main( int argc, char** argv )
 		
 		// wait 20ms for user input before processing the next frame
 		// Any user input will stop the execution
-#if DEBUGGING		
-		if (( waitKey( -1 ) & 0xff ) == 'q')
-			break;
-#else
-		if( waitKey( 10 ) >= 0) 
-			break;
-#endif
+//#if DEBUGGING		
+//		if (( waitKey( -1 ) & 0xff ) == 'q')
+//			break;
+//#else
+//		if( waitKey( 10 ) >= 0) 
+//			break;
+//#endif
 	}
 
 	/******************************************************************/

@@ -5,7 +5,9 @@
  * Created on December 8, 2014, 11:13 PM
  */
 
+#include "tracker/ARTagUtil.hpp"
 #include "tracker/ARTagBasedTracker.hpp"
+#include "tracker/utility.hpp"
 
 #include <opencv2/core/core.hpp>
 
@@ -14,51 +16,7 @@
 using namespace std;
 using namespace cv;
 
-bool verticesOnBorder( const ARToolKitPlus::ARMarkerInfo & minfo, const std::size_t w, const std::size_t h, const std::size_t d )
-{
-	for(std::size_t k = 0; k < 4; ++k)
-	{
-		if ( minfo.vertex[k][0] <= d || minfo.vertex[k][0] >= ( w - d ) )
-		{
-			return true;
-		}
-		if ( minfo.vertex[k][1] <= d || minfo.vertex[k][1] >= ( h - d ) )
-		{
-			return true;
-		}
-	}
-	return false;
-}
 
-void MyARLogger::artLog( const char* nStr )
-{
-	printf("%s\n", nStr );
-}
-
-
-void ARTKCamera::loadFromK( const OcvCamera & cam )
-{
-	cc[0] = (float) cam.matK.at<double>( 0, 2 );
-	cc[1] = (float)cam.matK.at<double>( 1, 2 );
-	fc[0] = (float)cam.matK.at<double>( 0, 0 );
-	fc[1] = (float)cam.matK.at<double>( 1, 1 );
-
-	memset( kc, 0, 6 * sizeof (ARFloat ) );
-	for ( std::size_t i = 0; i < cam.distCoeff.rows; ++i )
-	{
-		kc[i] = ( float ) cam.distCoeff.at<double>( i );
-	}
-
-	for ( std::size_t i = 0; i < 3; ++i )
-		for ( std::size_t j = 0; j < 4; ++j )
-		mat[i][j] = 0.0;
-
-	mat[0][0] = fc[0]; // fc_x
-	mat[1][1] = fc[1]; // fc_y
-	mat[0][2] = cc[0]; // cc_x
-	mat[1][2] = cc[1]; // cc_y
-	mat[2][2] = 1.0;
-}
 
 ARTagBasedTracker::ARTagBasedTracker( )
 : _arTagTracker( 640, 480 )
@@ -105,6 +63,9 @@ void ARTagBasedTracker::init( const Parameters & params, const OcvCamera &cam )
 	// switch to simple ID based markers
 	// use the tool in tools/IdPatGen to generate markers
 	_arTagTracker.setMarkerMode( params._markerMode );
+	
+	// RPP is more robust than ARToolKit's standard pose estimator
+	_arTagTracker.setPoseEstimator( ARToolKitPlus::POSE_ESTIMATOR_ORIGINAL );
 
 	_currLenForDebug = 0;
 
@@ -115,7 +76,10 @@ std::size_t ARTagBasedTracker::detectMarkers( const Mat & img )
 {
 
 	size_t numMark = 0;
-	_arTagTracker.calc( (unsigned char*) img.data, -1, false, &_infosForDebug, &_currLenForDebug );
+	MarkerID best = 0;
+	cout << "getting the pose" << endl;
+	best = _arTagTracker.calc( (unsigned char*) img.data, -1, true, &_infosForDebug, &_currLenForDebug );
+	cout << "best marker ID: "<< best << endl;
 
 	for( int i = 0; i < _currLenForDebug; ++i )
 	{
@@ -199,6 +163,31 @@ void ARTagBasedTracker::ignoreMarkerNextDetection( const MarkerID id )
 			_infosForDebug[i].id = NOTAMARKER;
 			return;
 		}
+	}
+}
+
+void ARTagBasedTracker::getPoseMatrix( cv::Mat &pose )
+{
+	if(_infosForDebug )
+	{
+//		cout << "getting the pose" << endl;
+		const ARFloat* ARMa = _arTagTracker.getModelViewMatrix();
+		pose = Mat(3, 4, CV_32FC1);
+
+		for( int i = 0; i < 3; i++ )
+		{
+			for( int j = 0; j < 4; j++ )
+			{
+				pose.at<float>(i,j) = ARMa[j*4+i];
+//				PRINTVAR(ARMa[i*4+j]);
+			}
+		}
+		
+//		PRINTVAR(pose.inv());
+	}
+	else
+	{
+		pose = Mat::eye(3,4,CV_32FC1);
 	}
 }
 

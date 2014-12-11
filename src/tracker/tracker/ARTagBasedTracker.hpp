@@ -8,45 +8,13 @@
 #ifndef _ARTAGBASEDTRACKER_HPP
 #define	_ARTAGBASEDTRACKER_HPP
 
-#include "OcvCamera.hpp"
+#include "ARTagUtil.hpp"
 
 #include <ARToolKitPlus/CameraAdvImpl.h>
 #include <ARToolKitPlus/TrackerSingleMarkerImpl.h>
 #include <opencv2/core/core.hpp>
 
-#define NOTAMARKER -1
 
-typedef int MarkerID;
-
-static const std::size_t kMaxTag = 30;
-
-class MyARLogger : public ARToolKitPlus::Logger
-{
-    void artLog( const char* nStr );	
-};
-
-
-
-class ARTKCamera : public ARToolKitPlus::CameraAdvImpl
-{
-public:
-
-    ARTKCamera( )
-    {
-	undist_iterations = 1;
-    }
-
-    ARTKCamera( const OcvCamera & cam )
-    {
-	loadFromK( cam );
-	undist_iterations = 1;
-    }
-
-    void loadFromK( const OcvCamera & cam );
-};
-
-
-	
 	
 class ARTagBasedTracker
 {
@@ -90,6 +58,8 @@ public:
     void visualDebug( cv::Mat & img );
 
     void ignoreMarkerNextDetection( const MarkerID id );
+    
+    void getPoseMatrix( cv::Mat &pose );
 
     virtual ~ARTagBasedTracker( );
 
