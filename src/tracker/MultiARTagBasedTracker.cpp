@@ -1,102 +1,24 @@
 /* 
- * File:   ARTagBasedTracker.cpp
+ * File:   MultiARTagBasedTracker.cpp
  * Author: sgaspari
  * 
- * Created on December 8, 2014, 11:13 PM
+ * Created on December 11, 2014, 9:52 PM
  */
 
+#include "tracker/MultiARTagBasedTracker.hpp"
 #include "tracker/ARTagUtil.hpp"
-#include "tracker/ARTagBasedTracker.hpp"
 #include "tracker/utility.hpp"
-
-#include <opencv2/core/core.hpp>
-
-#include <iostream>
 
 using namespace std;
 using namespace cv;
 
-
-
-ARTagBasedTracker::ARTagBasedTracker( )
+MultiARTagBasedTracker::MultiARTagBasedTracker( )
 : _arTagTracker( 640, 480 )
 , _infosForDebug( NULL )
 , _currLenForDebug( 0 )
 { }
 
-void ARTagBasedTracker::init( const Parameters & params, const OcvCamera &cam )
-{
-	// load a camera file. two types of camera files are supported:
-	//  - Std. ARToolKit
-	//  - MATLAB Camera Calibration Toolbox
-	if ( !_arTagTracker.init( NULL, 1.0f, 1000.0f ) )
-	{
-		cerr << "ERROR: cannot init ar tracker!" << endl;
-		return;
-	}
-
-	_arTagTracker.setCamera( new ARTKCamera( cam ) );
-
-	_arTagTracker.setPixelFormat( params._pixelFormat );
-
-	// define size of the marker
-	_arTagTracker.setPatternWidth( params._patternWidth );
-
-	// the marker in the BCH test image has a thin border...
-	_arTagTracker.setBorderWidth( params._borderWidth );
-
-	// set a threshold. alternatively we could also activate automatic thresholding
-	if( params._threshold > 0 )
-	{
-		_arTagTracker.setThreshold( params._threshold );
-	}
-	else
-	{
-		_arTagTracker.activateAutoThreshold( true );
-		_arTagTracker.setNumAutoThresholdRetries( params._thresholdRetries );
-	}
-
-	// let's use lookup-table undistortion for high-speed
-	// note: LUT only works with images up to 1024x1024
-	_arTagTracker.setUndistortionMode( params._distortion );
-
-	// switch to simple ID based markers
-	// use the tool in tools/IdPatGen to generate markers
-	_arTagTracker.setMarkerMode( params._markerMode );
-	
-	// RPP is more robust than ARToolKit's standard pose estimator
-	_arTagTracker.setPoseEstimator( ARToolKitPlus::POSE_ESTIMATOR_ORIGINAL );
-
-	_currLenForDebug = 0;
-
-	_params = params;
-}
-
-std::size_t ARTagBasedTracker::detectMarkers( const Mat & img )
-{
-
-	size_t numMark = 0;
-	MarkerID best = 0;
-	cout << "getting the pose" << endl;
-	best = _arTagTracker.calc( (unsigned char*) img.data, -1, true, &_infosForDebug, &_currLenForDebug );
-	cout << "best marker ID: "<< best << endl;
-
-	for( int i = 0; i < _currLenForDebug; ++i )
-	{
-		if ( verticesOnBorder( _infosForDebug[i], img.cols, img.rows, 16 ) )
-		{
-			_infosForDebug[i].id = NOTAMARKER;
-		}
-		if ( _infosForDebug[i].id != NOTAMARKER )
-		{
-			++numMark;
-		}
-	}
-
-	return numMark;
-}
-
-void ARTagBasedTracker::visualDebug(  Mat & img )
+void MultiARTagBasedTracker::visualDebug(  Mat & img )
 {
 
 	for ( int i = 0; i < _currLenForDebug; i++ )
@@ -153,7 +75,7 @@ void ARTagBasedTracker::visualDebug(  Mat & img )
 	}	
 }
 
-void ARTagBasedTracker::ignoreMarkerNextDetection( const MarkerID id )
+void MultiARTagBasedTracker::ignoreMarkerNextDetection( const MarkerID id )
 {
 	for( int i = 0; i < _currLenForDebug; ++i )
 	{
@@ -166,7 +88,72 @@ void ARTagBasedTracker::ignoreMarkerNextDetection( const MarkerID id )
 	}
 }
 
-void ARTagBasedTracker::getPoseMatrix( cv::Mat &pose )
+
+
+void MultiARTagBasedTracker::init( const Parameters & params, const OcvCamera &cam )
+{
+	// load a camera file. two types of camera files are supported:
+	//  - Std. ARToolKit
+	//  - MATLAB Camera Calibration Toolbox
+	if ( !_arTagTracker.init( NULL, params._multiPatternFilename.c_str(), 1.0f, 1000.0f ) )
+	{
+		cerr << "ERROR: cannot init ar tracker!" << endl;
+		return;
+	}
+
+	_arTagTracker.setCamera( new ARTKCamera( cam ) );
+
+	_arTagTracker.setPixelFormat( params._pixelFormat );
+
+
+	// the marker in the BCH test image has a thin border...
+	_arTagTracker.setBorderWidth( params._borderWidth );
+
+	// set a threshold. alternatively we could also activate automatic thresholding
+	if( params._threshold > 0 )
+	{
+		_arTagTracker.setThreshold( params._threshold );
+	}
+	else
+	{
+		_arTagTracker.activateAutoThreshold( true );
+		_arTagTracker.setNumAutoThresholdRetries( params._thresholdRetries );
+	}
+
+	// let's use lookup-table undistortion for high-speed
+	// note: LUT only works with images up to 1024x1024
+	_arTagTracker.setUndistortionMode( params._distortion );
+
+	// switch to simple ID based markers
+	// use the tool in tools/IdPatGen to generate markers
+	_arTagTracker.setMarkerMode( params._markerMode );
+	
+	// RPP is more robust than ARToolKit's standard pose estimator
+	_arTagTracker.setPoseEstimator( ARToolKitPlus::POSE_ESTIMATOR_ORIGINAL );
+
+	_currLenForDebug = 0;
+
+	_params = params;
+}
+
+std::size_t MultiARTagBasedTracker::detectMarkers( const Mat & img )
+{
+
+	size_t numMark = 0;
+	MarkerID best = 0;
+	cout << "getting the pose" << endl;
+	best = _arTagTracker.calc( (unsigned char*) img.data );
+	cout << "best marker ID: "<< best << endl;
+	
+	*_infosForDebug = _arTagTracker.getDetectedMarker(0);
+	_currLenForDebug = _arTagTracker.getNumDetectedMarkers();
+
+	return numMark;
+}
+
+
+
+void MultiARTagBasedTracker::getPoseMatrix( cv::Mat &pose )
 {
 	if(_infosForDebug )
 	{
@@ -192,5 +179,5 @@ void ARTagBasedTracker::getPoseMatrix( cv::Mat &pose )
 	}
 }
 
-ARTagBasedTracker::~ARTagBasedTracker( ) { }
 
+MultiARTagBasedTracker::~MultiARTagBasedTracker( ) { }
