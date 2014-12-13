@@ -98,7 +98,10 @@ int main( int argc, char** argv )
 
        // if no more images to process exit the loop
         if(view.empty())
+		{
+			cerr << "end " <<  endl;
         	break;
+		}
 
         // detect the markers
         if( tracker.detectMarkers( view ) > 0)

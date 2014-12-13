@@ -1,6 +1,9 @@
 add_executable( calibration calibration.cpp )
 target_link_libraries( calibration ${OpenCV_LIBS} )
 
+add_executable( circledetection circledetection.cpp )
+target_link_libraries( circledetection ${OpenCV_LIBS} )
+
 add_executable( simpleDetection simpleDetection.cpp )
 target_link_libraries( simpleDetection ${OpenCV_LIBS} tracker)
 
