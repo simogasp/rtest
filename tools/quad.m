@@ -26,7 +26,10 @@ for i = 1:size(e,1)
     if ( size(t{1},2) == 2 )
         
         % put the vertices in a (unique) list
-        quadID = unique(reshape(dt.Triangulation(t{1},:).', [],1));
+        % FIXME preserve the order!
+        l = reshape(dt.Triangulation(t{1},:).', [],1);
+        [~, m1, ~] = unique(l);
+        quadID = l(sort(m1));
         
         quad = X(quadID,:);
         
@@ -72,4 +75,5 @@ triplot(dt)
 hold on
 plot(X(e(i,:),1)', X(e(i,:),2)', '.-r')
 plot(X(kyte,1)', X(kyte,2)', '.g')
+plot(X(quadID,1)', X(quadID,2)', '-k')
 plot(X(quadID,1)', X(quadID,2)', '.m')
