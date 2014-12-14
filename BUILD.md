@@ -1,4 +1,4 @@
-An Augmented Reality application
+Testing marker based Augmented Reality
 ===========================================
 
 ----------------------
@@ -19,7 +19,8 @@ The project depends on:
 - OpenGL
 - GLM ([webpage](http://devernay.free.fr/hacks/glm/)) which provides a more complete interface to the OBJ format (i.e. it manages textures, materials etc.).
 - ARToolkitplus for marker detection and tracking 
-```
+
+```shell
 git clone https://github.com/fabiencastan/ARToolkitPlus
 cd ARToolkitPlus
 git checkout -b dev_compilation origin/dev_compilation

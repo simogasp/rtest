@@ -18,7 +18,8 @@
 
 typedef int MarkerID;
 
-static const std::size_t kMaxTag = 30;
+/// the maximum number of patterns that can be analyzed in a camera image
+static const std::size_t kMaxTag = 40;
 
 class MyARLogger : public ARToolKitPlus::Logger
 {

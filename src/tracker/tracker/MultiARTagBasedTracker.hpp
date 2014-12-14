@@ -1,24 +1,22 @@
 /* 
- * File:   ARTagBasedTracker.hpp
+ * File:   MultiARTagBasedTracker.hpp
  * Author: sgaspari
  *
- * Created on December 8, 2014, 11:13 PM
+ * Created on December 11, 2014, 9:52 PM
  */
 
-#ifndef _ARTAGBASEDTRACKER_HPP
-#define	_ARTAGBASEDTRACKER_HPP
+#ifndef MULTIARTAGBASEDTRACKER_HPP
+#define	MULTIARTAGBASEDTRACKER_HPP
 
+#include "OcvCamera.hpp"
 #include "ARTagUtil.hpp"
+#include "MyTrackerMultiMarkerImpl.hpp"
 
-#include <ARToolKitPlus/TrackerSingleMarkerImpl.h>
 #include <opencv2/core/core.hpp>
 
-
-	
-class ARTagBasedTracker
+class MultiARTagBasedTracker
 {
 public:
-
     struct Parameters
     {
 
@@ -30,7 +28,7 @@ public:
 	, _thresholdRetries( 4 )
 	, _borderWidth( 0.25f )
 	, _patternWidth( 80 )
-	, _calibrationFilename( )
+	, _multiPatternFilename( )
 	, _width( 0 )
 	, _height( 0 ) { }
 
@@ -41,14 +39,14 @@ public:
 	std::size_t _thresholdRetries;
 	float _borderWidth;
 	std::size_t _patternWidth;
-	std::string _calibrationFilename;
+	std::string _multiPatternFilename;
 	std::size_t _width;
 	std::size_t _height;
     };
 
 
 
-    ARTagBasedTracker( );
+    MultiARTagBasedTracker( );
 
     void init( const Parameters & args, const OcvCamera &cam );
 
@@ -60,10 +58,10 @@ public:
     
     void getPoseMatrix( cv::Mat &pose );
 
-    virtual ~ARTagBasedTracker( );
+    virtual ~MultiARTagBasedTracker( );
 
 private:
-    ARToolKitPlus::TrackerSingleMarkerImpl<6, 6, 6, 1, kMaxTag> _arTagTracker;
+    MyTrackerMultiMarkerImpl<6, 6, 6, 1, kMaxTag> _arTagTracker;
     ARToolKitPlus::ARMarkerInfo *_infosForDebug;
     MyARLogger _logger;
     int _currLenForDebug;
@@ -71,5 +69,5 @@ private:
 
 };
 
-#endif	/* _ARTAGBASEDTRACKER_HPP */
+#endif	/* MULTIARTAGBASEDTRACKER_HPP */
 
