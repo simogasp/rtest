@@ -1,3 +1,6 @@
+clear all
+close all
+
 numIter=100;
 
 [X, Y] = meshgrid(1:10, 1:10);
@@ -73,7 +76,7 @@ for i = 1:size(e,1)
                 V = V./V(3);
                 
                 % quantize V
-                V = round(V*10);
+                V = int16(round(V*100));
                 % update the LUT
                 if ~(isempty(LUT))
                     
@@ -148,7 +151,7 @@ for i = 1:size(e,1)
         
         % now algorithm 1   
         H = homography2d(quad', uniQuad');
-        votes = zeros(1, numEdges);
+        votes = int16(zeros(1, numEdges));
         
         % for each connected neighboor
         for v = kyte'
@@ -156,7 +159,7 @@ for i = 1:size(e,1)
             V = V./V(3);
             
             % quantize V
-            V = round(V*10);
+            V = int16(round(V*100));
             
             [ism,b]=ismember(V(1:2)', LUT(:,1:2),'rows' );
             if(ism)
@@ -178,6 +181,18 @@ for i = 1:size(e,1)
             [mm, ix] = sort(votes, 'descend');
             disp([mm(1:3)' ix(1:3)'])
             numNOK = numNOK+1;
+            
+%             figure(3)
+%             triplot(dt)
+%             hold on
+% 
+%             plot(X(kyte,1)', X(kyte,2)', '.g')
+%             plot(X(quadID,1)', X(quadID,2)', '-k')
+%             plot(X(quadID,1)', X(quadID,2)', '.m')
+%             plot(X(e(i,:),1)', X(e(i,:),2)', '.-r')         
+%             plot(X(e(I,:),1)', X(e(I,:),2)', 'o-y')
+%             pause
+%             cla
         
         end
                 
