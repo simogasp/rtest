@@ -25,9 +25,16 @@ if ( size(t{1},2) == 2 )
     
     % put the vertices in a (unique) list
     % FIXME preserve the order!
-    l = reshape(dt.Triangulation(t{1},:).', [],1);
-    [~, m1, ~] = unique(l);
-    quadID = l(sort(m1));
+%     l = reshape(dt.Triangulation(t{1},:).', [],1);
+%     [~, m1, ~] = unique(l);
+%     quadID = l(sort(m1));
+    
+    l = dt.Triangulation(t{1},:);
+    quadID = zeros(4,1);
+    quadID(1) = e(1);
+    quadID(2) = setdiff(l(1,:), e);
+    quadID(3) = e(2);
+    quadID(4) = setdiff(l(2,:), e);
 
 else
     warning('only one triangle attached to this edge')

@@ -4,8 +4,8 @@ close all
 numIter=100;
 
 [X, Y] = meshgrid(1:10, 1:10);
-
-X = [reshape(X, [], 1) reshape(Y, [], 1)] + 0.25*randn(100,2);
+X = X + repmat([0;.5],5,10);
+X = [reshape(X, [], 1) reshape(Y, [], 1)] + 0.05*randn(100,2);
 
 dt = DelaunayTri(X);
 
