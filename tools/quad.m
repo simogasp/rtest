@@ -40,18 +40,6 @@ for i = 1:size(e,1)
     % if t has 2 triangles
     if ( size(t{1},2) == 2 )
         
-        % put the vertices in a (unique) list
-        % FIXME preserve the order!
-%         l = reshape(dt.Triangulation(t{1},:).', [],1);
-%         [~, m1, ~] = unique(l);
-%         quadID = l(sort(m1));
-        
-%         l = dt.Triangulation(t{1},:);
-%         quadID = zeros(4,1);
-%         quadID(1) = e(i,1);
-%         quadID(2) = setdiff(l(1,:), e(i,:));
-%         quadID(3) = e(i,2);
-%         quadID(4) = setdiff(l(2,:), e(i,:));
         
         
         quadID = getQuad(dt, e(i,:));
@@ -144,18 +132,6 @@ for i = 1:size(e,1)
     % if t has 2 triangles
     if ( size(t{1},2) == 2 )
         
-        % put the vertices in a (unique) list
-        % FIXME preserve the order!
-%         l = reshape(dt.Triangulation(t{1},:).', [],1);
-%         [~, m1, ~] = unique(l);
-%         quadID = l(sort(m1));
-        
-%         l = dt.Triangulation(t{1},:);
-%         quadID = zeros(4,1);
-%         quadID(1) = e(i,1);
-%         quadID(2) = setdiff(l(1,:), e(i,:));
-%         quadID(3) = e(i,2);
-%         quadID(4) = setdiff(l(2,:), e(i,:));
                
         quadID = getQuad(dt, e(i,:));
         quad = X(quadID,:);
@@ -200,10 +176,7 @@ for i = 1:size(e,1)
         % get the max votes
         [Y,I] = max(votes);
         
-        test = any([are3pointsAligned(quad(1,:)', quad(2,:)', quad(3,:)', degThresh)...
-                are3pointsAligned(quad(2,:)', quad(3,:)', quad(4,:)', degThresh)...
-                are3pointsAligned(quad(3,:)', quad(4,:)', quad(1,:)', degThresh)...
-                are3pointsAligned(quad(4,:)', quad(1,:)', quad(2,:)', degThresh)]);
+        test = degenerateQuad(quad, degThresh);
         
         if (i==I && ~test)
             numOK = numOK+1;
@@ -262,7 +235,7 @@ end
 %%
 bb =[1 1; 1 10; 10 10; 10 1]';
 
-bb2 = bb + 0.1*randn(2,4);
+bb2 = bb + randn(2,4);
 
 Hgt = homography2d(bb, bb2);
 
@@ -330,10 +303,7 @@ for i = 1:size(egt,1)
         % get the max votes
         [Y,I] = max(votes);
         
-        test = any([are3pointsAligned(quad(1,:)', quad(2,:)', quad(3,:)', degThresh)...
-                are3pointsAligned(quad(2,:)', quad(3,:)', quad(4,:)', degThresh)...
-                are3pointsAligned(quad(3,:)', quad(4,:)', quad(1,:)', degThresh)...
-                are3pointsAligned(quad(4,:)', quad(1,:)', quad(2,:)', degThresh)]);
+        test = degenerateQuad(quad, degThresh);
         
         if ( ~test)
             [mm, ix] = sort(votes, 'descend');
