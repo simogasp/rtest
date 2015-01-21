@@ -166,25 +166,46 @@ void ARTagBasedTracker::ignoreMarkerNextDetection( const MarkerID id )
 	}
 }
 
-void ARTagBasedTracker::getPoseMatrix( cv::Mat &pose )
+void ARTagBasedTracker::getPoseMatrix( cv::Mat &pose, const OcvCamera &cam )
 {
 	if(_infosForDebug )
 	{
-//		cout << "getting the pose" << endl;
-		const ARFloat* ARMa = _arTagTracker.getModelViewMatrix();
-		pose = Mat::eye(3, 4, CV_32FC1);
-
-		for( int i = 0; i < 3; i++ )
+////		cout << "getting the pose" << endl;
+//		const ARFloat* ARMa = _arTagTracker.getModelViewMatrix();
+//		pose = Mat::eye(3, 4, CV_32FC1);
+//
+//		for( int i = 0; i < 3; i++ )
+//		{
+//			for( int j = 0; j < 4; j++ )
+//			{
+//				pose.at<float>(i,j) = ARMa[j*4+i];
+//				PRINTVAR(ARMa[j*4+i]);
+//				PRINTVAR(j*4+i);
+//			}
+//		}
+		
+		// get the 4 vertices
+		vector<Point2f> vx;
+		vector<Point2f> vgt;
+		vx.reserve(4);
+		vgt.reserve(4);
+		vgt.push_back(Point2f(0.0, 0.0));
+		vgt.push_back(Point2f(0.0, 80.0));
+		vgt.push_back(Point2f(80.0, 80.0));
+		vgt.push_back(Point2f(80.0, 0.0));
+		for(int i = 0; i < 4; ++i )
 		{
-			for( int j = 0; j < 4; j++ )
-			{
-				pose.at<float>(i,j) = ARMa[j*4+i];
-				PRINTVAR(ARMa[j*4+i]);
-				PRINTVAR(j*4+i);
-			}
+			vx.push_back(Point2f(_infosForDebug[0].vertex[i][0], _infosForDebug[0].vertex[i][1]));
+			
 		}
 		
-//		PRINTVAR(pose.inv());
+		PRINTVAR(vx);
+		PRINTVAR(vgt);
+		Mat K;
+		cam.matK.convertTo(K, CV_32F);
+		computePose(vgt, vx, K, pose );
+		
+		PRINTVAR(pose);
 	}
 	else
 	{

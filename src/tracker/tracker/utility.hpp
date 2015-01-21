@@ -30,6 +30,15 @@ enum Pattern { CHESSBOARD, CIRCLES_GRID, ASYMMETRIC_CIRCLES_GRID };
 bool detectChessboard( const cv::Mat &rgbimage, std::vector<cv::Point2f> &pointbuf, const cv::Size &boardSize, const Pattern patternType );
 
 /**
+ * Compute the pose using homography decomposition from 4 corresponding points
+ * @param imgpts the image points
+ * @param refpts the reference points
+ * @param matK the camera calibration matrix
+ * @param poseMat the pose matrix
+ */
+void computePose( const std::vector<cv::Point2f>& imgpts, const std::vector<cv::Point2f>& refpts, const cv::Mat& matK, cv::Mat& poseMat );
+
+/**
  * Decompose the homography into its components R and t
  *
  * @param[in] H The homography H = [r1 r2 t]

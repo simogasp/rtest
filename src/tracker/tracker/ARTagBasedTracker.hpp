@@ -58,7 +58,7 @@ public:
 
     void ignoreMarkerNextDetection( const MarkerID id );
     
-    void getPoseMatrix( cv::Mat &pose );
+    void getPoseMatrix( cv::Mat &pose, const OcvCamera &cam = OcvCamera() );
 
     virtual ~ARTagBasedTracker( );
 

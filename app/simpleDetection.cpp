@@ -111,9 +111,9 @@ int main( int argc, char** argv )
 			//******************************************************************/
         	tracker.visualDebug( view );
 			Mat pose;
-			tracker.getPoseMatrix( pose );
+			tracker.getPoseMatrix( pose, cam );
 			PRINTVAR(pose);
-			drawReferenceSystem( view, cam, pose, 4, 15, true );
+			drawReferenceSystem( view, cam, pose, 4, 55, true );
         }
 
 		/******************************************************************/
@@ -127,8 +127,8 @@ int main( int argc, char** argv )
 //		if (( waitKey( -1 ) & 0xff ) == 'q')
 //			break;
 //#else
-//		if( waitKey( 10 ) >= 0) 
-//			break;
+		if( waitKey( 10 ) >= 0) 
+			break;
 //#endif
 	}
 

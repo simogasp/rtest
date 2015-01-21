@@ -109,9 +109,12 @@ void drawReferenceSystem( cv::Mat &rgbimage, const OcvCamera& cam, const cv::Mat
 	// the reference system to vertex3D. Use <scale> as unit
 	//******************************************************************/
 	vertex3D.push_back( Point3f( 0, 0, 0) );
-	vertex3D.push_back( Point3f( 0, scale, 0) );
+//	vertex3D.push_back( Point3f( 0, scale, 0) );
+//	vertex3D.push_back( Point3f( scale, 0, 0) );
+//	vertex3D.push_back( Point3f( 0, 0, -scale) )
 	vertex3D.push_back( Point3f( scale, 0, 0) );
-	vertex3D.push_back( Point3f( 0, 0, -scale) );
+	vertex3D.push_back( Point3f( 0, scale, 0) );
+	vertex3D.push_back( Point3f( 0, 0, scale) );
 
 	// contains the projected 3D points on the image
 	vector<Point2f> imgRefPts;
@@ -235,6 +238,8 @@ void decomposeHomography( const Mat &H, const Mat& matK, Mat& poseMat )
 	//******************************************************************/
 	//temp contains inv(K)*H
 	//******************************************************************/
+	PRINTVAR( matK );
+	PRINTVAR( H );
 	temp = matK.inv()*H;
 	PRINTVAR( temp );
   	
@@ -295,6 +300,25 @@ void decomposeHomography( const Mat &H, const Mat& matK, Mat& poseMat )
 //  	PRINTVAR( poseMat );
 
 }
+
+/**
+ * Compute the pose using homography decomposition from 4 corresponding points
+ * @param imgpts the image points
+ * @param refpts the reference points
+ * @param matK the camera calibration matrix
+ * @param poseMat the pose matrix
+ */
+void computePose( const std::vector<cv::Point2f>& imgpts, const std::vector<cv::Point2f>& refpts, const cv::Mat& matK, cv::Mat& poseMat ) 
+{
+		// estimate the homography
+		Mat H = findHomography(imgpts, refpts, 0 );
+		PRINTVAR(H);
+		Mat Hp;
+		H.convertTo(Hp, CV_32F );
+		// decompose the homography
+		decomposeHomography( Hp, matK, poseMat);
+}
+
 
 
 /******************************************************************************/
