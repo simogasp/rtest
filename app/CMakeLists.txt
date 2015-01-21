@@ -10,6 +10,9 @@ target_link_libraries( delaunay ${OpenCV_LIBS} )
 add_executable( simpleDetection simpleDetection.cpp )
 target_link_libraries( simpleDetection ${OpenCV_LIBS} tracker)
 
+add_executable( multiDetection multiDetection.cpp )
+target_link_libraries( multiDetection ${OpenCV_LIBS} tracker)
+
 include_directories( ${LIBGLM_INCLUDE_DIRS})
 
 add_executable( videoOGLTracking videoOGLTracking.cpp )
